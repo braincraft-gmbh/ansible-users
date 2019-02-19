@@ -1,0 +1,16 @@
+---
+- name: Make sure sudo package is installed
+  apt:
+    name: sudo
+    state: present
+  tags: [ 'sudoers', 'sudo' ]
+
+- name: Deploy sudoers block
+  blockinfile:
+    dest: /etc/sudoers
+    marker: "# {mark} ANSIBLE MANAGED {{ item.name }}"
+    block: "{{ lookup('template', 'sudoers_block.j2') }}"
+    validate: visudo -cf %s
+  loop: "{{ users }}"
+  when: item.sudo is defined
+  tags: [ 'sudoers', 'sudo' ]

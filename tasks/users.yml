@@ -1,0 +1,7 @@
+---
+- name: Add users
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+    shell: /bin/bash
+    append: yes

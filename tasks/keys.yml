@@ -1,0 +1,19 @@
+- name: "Check if keys of user {{ item.name }} exist"
+  stat:
+    path: "{{ ssh_keys_path }}/{{ item.name }}.pub"
+  delegate_to: localhost
+  register: user_key
+
+- name: "Add default key for user {{ item.name }}"
+  copy:
+    src: "{{ default_key }}"
+    dest: "{{ ssh_keys_path }}/{{ item.name }}.pub"
+  when: user_key.stat.exists == False
+  delegate_to: localhost
+
+- name: "Add authorized_keys to user {{ item.name }}"
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ lookup('file', '{{ ssh_keys_path }}/{{ item.name }}.pub') }}"
+    state: present
+    exclusive: yes

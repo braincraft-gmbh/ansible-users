@@ -1,0 +1,12 @@
+---
+- include_tasks: groups.yml
+- include_tasks: users.yml
+  loop: "{{ users }}"
+  when: users != []
+- include_tasks: keys.yml
+  loop: "{{ users }}"
+  tags:
+    - 'keys'
+- include_tasks: sudoers.yml
+  tags:
+    - 'sudoers'
