@@ -8,7 +8,7 @@
   copy:
     src: "{{ default_key }}"
     dest: "{{ ssh_keys_path }}/{{ item.name }}.pub"
-  when: user_key.stat.exists == False
+  when: not user_key.stat.exists
   delegate_to: localhost
 
 - name: "Add authorized_keys to user {{ item.name }}"
